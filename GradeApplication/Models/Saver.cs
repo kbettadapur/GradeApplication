@@ -13,7 +13,7 @@ namespace GradeApplication.Models
         public static void SaveData(ObservableCollection<Course> courses)
         {
             string SaveString = "";
-            StreamWriter FileWriter = new StreamWriter("SavedStuff.txt");
+            StreamWriter FileWriter = new StreamWriter("SavedData.txt");
             for (int i = 0; i < courses.Count(); i++)
             {
                 SaveString = SaveString + courses[i].Name + ",";
@@ -68,10 +68,18 @@ namespace GradeApplication.Models
         public static ObservableCollection<Course> LoadData()
         {
             ObservableCollection<Course> courses = new ObservableCollection<Course>();
-            StreamReader File = new StreamReader("SavedStuff.txt");
-            while (File.Peek() > 0)
+            StreamReader savedData;
+            if (File.Exists("SavedData.txt")) { 
+                savedData = new StreamReader("SavedData.txt");
+            } 
+            else 
             {
-                string line = File.ReadLine();
+                savedData = new StreamReader(File.Create("SavedData.txt"));
+            }
+            
+            while (savedData.Peek() > 0)
+            {
+                string line = savedData.ReadLine();
                 string[] courseLine = line.Split(',');
                 Console.WriteLine("courseLine length: " + courseLine.Length);
                 if (courseLine[1] == "")
@@ -102,7 +110,7 @@ namespace GradeApplication.Models
                 }
             }
 
-            File.Close();
+            savedData.Close();
             return courses;
         }
     }
